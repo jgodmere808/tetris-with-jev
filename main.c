@@ -6,6 +6,8 @@
 #include "raylib.h"
 #include "shape/shape.h"
 
+#define MAX_SHAPE_STORE 1000
+
 int main()
 {
     srand(time(NULL));
@@ -15,6 +17,11 @@ int main()
 
     const int screenWidth = 800;
     const int screenHeight = 800;
+
+    buildRandomShape();
+
+    struct Shape nextShape = buildRandomShape();
+    moveShape(&nextShape, 600, 150);
 
     struct Shape fallingShape = buildRandomShape();
     moveShape(&fallingShape, 340, 100);
@@ -26,10 +33,18 @@ int main()
     while (!WindowShouldClose()) {
         
         // Update
-        timeBuffer += GetFrameTime();
-        if (timeBuffer >= blockSpeed) {
-            fallingShape.posY += 30;
-            timeBuffer = 0;
+        if (fallingShape.posY >= 700) {
+            fallingShape = nextShape;
+            moveShape(&fallingShape, 340, 100);
+
+            nextShape = buildRandomShape();
+            moveShape(&nextShape, 600, 150);
+        } else {
+            timeBuffer += GetFrameTime();
+            if (timeBuffer >= blockSpeed) {
+                fallingShape.posY += 30;
+                timeBuffer = 0;
+            }
         }
 
         // Draw
@@ -37,19 +52,21 @@ int main()
             ClearBackground(DARKGRAY);
 
             // Main Rectangles
+            // level
             DrawRectangle(95, 95, 135, 110, GRAY);
             DrawRectangle(100, 100, 125, 100, BLACK);
-
-            DrawRectangle(570, 95, 110, 110, GRAY);
-            DrawRectangle(575, 100, 100, 100, BLACK);
-
+            // next
+            DrawRectangle(570, 95, 160, 130, GRAY);
+            DrawRectangle(575, 100, 150, 120, BLACK);
+            // tetris field
             DrawRectangle(245, 95, 310, 610, GRAY);
             DrawRectangle(250, 100, 300, 600, BLACK);
-
-            DrawRectangle(570, 220, 210, 410, GRAY);
-            DrawRectangle(575, 225, 200, 400, BLACK);
+            // score
+            DrawRectangle(570, 240, 210, 410, GRAY);
+            DrawRectangle(575, 245, 200, 400, BLACK);
 
             drawShape(fallingShape);
+            drawShape(nextShape);
 
             // Main Cover Rectangles
             DrawRectangle(250, 0, 300, 95, DARKGRAY);
@@ -58,7 +75,7 @@ int main()
             // Main Text
             DrawText("TETRIS WITH JEV", 248, 30, 32, WHITE);
             DrawText("LEVEL", 110, 105, 32, WHITE);
-            DrawText("NEXT", 581, 105, 32, WHITE);
+            DrawText("NEXT", 605, 105, 32, WHITE);
 
         EndDrawing();
     }
