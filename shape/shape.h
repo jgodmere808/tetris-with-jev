@@ -19,17 +19,19 @@ struct ShapeSquare
     int width;
     int height;
     Color color;
+
+    int borderPosX;
+    int borderPosY;
+    int borderWidth;
+    int borderHeight;
+    Color borderColor;
 };
 
 struct ShapeState {
     struct ShapeSquare s1;
-    struct ShapeSquare borderS1;
     struct ShapeSquare s2;
-    struct ShapeSquare borderS2;
     struct ShapeSquare s3;
-    struct ShapeSquare borderS3;
     struct ShapeSquare s4;
-    struct ShapeSquare borderS4;
 };
 
 struct Shape {

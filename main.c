@@ -6,7 +6,8 @@
 #include "raylib.h"
 #include "shape/shape.h"
 
-#define MAX_SHAPE_STORE 1000
+#define MAX_SQUARE_STORE_ROW 40
+#define MAX_SQUARE_STORE_COL 20
 
 int main()
 {
@@ -33,7 +34,7 @@ int main()
     while (!WindowShouldClose()) {
         
         // Update
-        if (fallingShape.posY >= 700) {
+        if (fallingShape.posY >= 670) {
             fallingShape = nextShape;
             moveShape(&fallingShape, 340, 100);
 
