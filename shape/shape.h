@@ -8,7 +8,8 @@ enum ShapeType {
     GREEN_ZIGZAG,
     PLUS,
     ORANGE_L,
-    BLUE_L
+    BLUE_L,
+    SHAPE_COUNT // counter, not a valid shape
 };
 
 struct ShapeSquare
@@ -42,6 +43,8 @@ struct Shape {
 };
 
 struct Shape buildShape(enum ShapeType type);
+
+struct Shape buildRandomShape();
 
 void moveShape(struct Shape *shape, int posX, int posY);
 

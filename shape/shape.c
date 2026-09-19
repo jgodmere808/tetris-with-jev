@@ -1,4 +1,8 @@
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
 #include "shape.h"
 #include "raylib.h"
 
@@ -287,9 +291,19 @@ struct Shape buildShape(enum ShapeType type)
             shape.states[3].borderS4 = (struct ShapeSquare){ 30, 0, 30, 30, blueBorder };
             shape.states[3].s4 = (struct ShapeSquare){ 32, 2, 26, 26, blue };
             break;
+        case SHAPE_COUNT:
+            perror("INVALID SHAPE: SHAPE_COUNT");
+            break;
     }
 
     return shape;
+}
+
+struct Shape buildRandomShape()
+{
+    enum ShapeType type = rand() % SHAPE_COUNT;
+    
+    return buildShape(type);
 }
 
 void moveShape(struct Shape *shape, int posX, int posY)
