@@ -11,7 +11,7 @@ int main()
 {
     srand(time(NULL));
 
-    bool hasMovedLeft = false, hasMovedRight = false;
+    bool hasMovedLeft = false, hasMovedRight = false, hasPressedUp = false;
 
     double timeBuffer = 0;
     double blockSpeed = 1.5; // Start at 1 block per 1.5 seconds
@@ -45,9 +45,14 @@ int main()
             fallingShape.posX -= 30;
             hasMovedLeft = true;
         }
+        if (IsKeyDown(KEY_UP) && !hasPressedUp) {
+            rotateShape(&fallingShape);
+            hasPressedUp = true;
+        }
 
         if (IsKeyUp(KEY_RIGHT)) hasMovedRight = false;
         if (IsKeyUp(KEY_LEFT)) hasMovedLeft = false;
+        if (IsKeyUp(KEY_UP)) hasPressedUp = false;
 
         if (fallingShape.posX - fallingShape.states[fallingShape.i].maxLeft < 250) {
             fallingShape.posX = 250 + fallingShape.states[fallingShape.i].maxLeft;
