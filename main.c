@@ -11,11 +11,13 @@ int main()
     srand(time(NULL));
 
     double timeBuffer = 0;
+    double blockSpeed = 1.5; // Start at 1 block per 1.5 seconds
 
     const int screenWidth = 800;
     const int screenHeight = 800;
 
-    struct Shape nextShape = buildRandomShape();
+    struct Shape fallingShape = buildRandomShape();
+    moveShape(&fallingShape, 340, 100);
 
     InitWindow(screenWidth, screenHeight, "Tetris with Jev");
 
@@ -25,8 +27,8 @@ int main()
         
         // Update
         timeBuffer += GetFrameTime();
-        if (timeBuffer >= 2) {
-            nextShape = buildRandomShape();
+        if (timeBuffer >= blockSpeed) {
+            fallingShape.posY += 30;
             timeBuffer = 0;
         }
 
@@ -47,7 +49,7 @@ int main()
             DrawRectangle(570, 220, 210, 410, GRAY);
             DrawRectangle(575, 225, 200, 400, BLACK);
 
-            drawShape(nextShape);
+            drawShape(fallingShape);
 
             // Main Cover Rectangles
             DrawRectangle(250, 0, 300, 95, DARKGRAY);
