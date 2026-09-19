@@ -6,9 +6,6 @@
 #include "raylib.h"
 #include "shape/shape.h"
 
-#define MAX_SQUARE_STORE_ROW 40
-#define MAX_SQUARE_STORE_COL 20
-
 int main()
 {
     srand(time(NULL));
@@ -16,16 +13,24 @@ int main()
     double timeBuffer = 0;
     double blockSpeed = 1.5; // Start at 1 block per 1.5 seconds
 
+    struct ShapeSquare squareStore[40][20];
+
     const int screenWidth = 800;
     const int screenHeight = 800;
 
-    buildRandomShape();
+    // buildRandomShape();
 
-    struct Shape nextShape = buildRandomShape();
-    moveShape(&nextShape, 600, 150);
+    // struct Shape nextShape = buildRandomShape();
+    // moveShape(&nextShape, 600, 150);
 
-    struct Shape fallingShape = buildRandomShape();
-    moveShape(&fallingShape, 340, 100);
+    // struct Shape fallingShape = buildRandomShape();
+    // moveShape(&fallingShape, 340, 100);
+
+    struct Shape shape = buildShape(BLUE_L);
+    moveShape(&shape, 250, 100);
+    rotateShape(&shape);
+    rotateShape(&shape);
+    rotateShape(&shape);
 
     InitWindow(screenWidth, screenHeight, "Tetris with Jev");
 
@@ -34,19 +39,19 @@ int main()
     while (!WindowShouldClose()) {
         
         // Update
-        if (fallingShape.posY >= 670) {
-            fallingShape = nextShape;
-            moveShape(&fallingShape, 340, 100);
+        // if (fallingShape.posY >= 670) {
+        //     fallingShape = nextShape;
+        //     moveShape(&fallingShape, 340, 100);
 
-            nextShape = buildRandomShape();
-            moveShape(&nextShape, 600, 150);
-        } else {
-            timeBuffer += GetFrameTime();
-            if (timeBuffer >= blockSpeed) {
-                fallingShape.posY += 30;
-                timeBuffer = 0;
-            }
-        }
+        //     nextShape = buildRandomShape();
+        //     moveShape(&nextShape, 600, 150);
+        // } else {
+        //     timeBuffer += GetFrameTime();
+        //     if (timeBuffer >= blockSpeed) {
+        //         fallingShape.posY += 30;
+        //         timeBuffer = 0;
+        //     }
+        // }
 
         // Draw
         BeginDrawing();
@@ -66,8 +71,10 @@ int main()
             DrawRectangle(570, 240, 210, 410, GRAY);
             DrawRectangle(575, 245, 200, 400, BLACK);
 
-            drawShape(fallingShape);
-            drawShape(nextShape);
+            // drawShape(fallingShape);
+            // drawShape(nextShape);
+
+            drawShape(shape);
 
             // Main Cover Rectangles
             DrawRectangle(250, 0, 300, 95, DARKGRAY);

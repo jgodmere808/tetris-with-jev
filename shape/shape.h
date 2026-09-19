@@ -28,6 +28,10 @@ struct ShapeSquare
 };
 
 struct ShapeState {
+    int maxLeft;
+    int maxRight;
+    int maxBottom;
+
     struct ShapeSquare s1;
     struct ShapeSquare s2;
     struct ShapeSquare s3;
