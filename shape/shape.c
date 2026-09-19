@@ -216,7 +216,7 @@ struct Shape buildShape(enum ShapeType type)
             shape.states[1].s3 = (struct ShapeSquare){ 32, 32, 26, 26, orange, 30, 30, 30, 30, orangeBorder };
             shape.states[1].s4 = (struct ShapeSquare){ 62, 32, 26, 26, orange, 60, 30, 30, 30, orangeBorder };
 
-            shape.states[2].maxLeft = 0;
+            shape.states[2].maxLeft = 30;
             shape.states[2].maxRight = 120;
             shape.states[2].maxBottom = 60;
             shape.states[2].s1 = (struct ShapeSquare){ 32, 2, 26, 26, orange, 30, 0, 30, 30, orangeBorder };

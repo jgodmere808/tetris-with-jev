@@ -54,8 +54,8 @@ int main()
         if (IsKeyUp(KEY_LEFT)) hasMovedLeft = false;
         if (IsKeyUp(KEY_UP)) hasPressedUp = false;
 
-        if (fallingShape.posX - fallingShape.states[fallingShape.i].maxLeft < 250) {
-            fallingShape.posX = 250 + fallingShape.states[fallingShape.i].maxLeft;
+        if (fallingShape.posX + fallingShape.states[fallingShape.i].maxLeft < 250) {
+            fallingShape.posX = 250 - fallingShape.states[fallingShape.i].maxLeft;
         }
         if (fallingShape.posX + fallingShape.states[fallingShape.i].maxRight > 550) {
             fallingShape.posX = 550 - fallingShape.states[fallingShape.i].maxRight;
