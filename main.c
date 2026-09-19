@@ -11,6 +11,8 @@ int main()
 {
     srand(time(NULL));
 
+    bool hasMovedLeft = false, hasMovedRight = false;
+
     double timeBuffer = 0;
     double blockSpeed = 1.5; // Start at 1 block per 1.5 seconds
 
@@ -19,7 +21,9 @@ int main()
     const int screenWidth = 800;
     const int screenHeight = 800;
 
-    // buildRandomShape();
+    // Typically, the first shape is always BLUE_L for some reason.
+    // This fixes that by not using the first shape built.
+    buildRandomShape();
 
     struct Shape nextShape = buildRandomShape();
     moveShape(&nextShape, 600, 150);
@@ -33,8 +37,17 @@ int main()
 
     while (!WindowShouldClose()) {
 
-        if (IsKeyDown(KEY_RIGHT)) fallingShape.posX += 30;
-        if (IsKeyDown(KEY_LEFT)) fallingShape.posX -= 30;
+        if (IsKeyDown(KEY_RIGHT) && !hasMovedRight) {
+            fallingShape.posX += 30;
+            hasMovedRight = true;
+        }
+        if (IsKeyDown(KEY_LEFT) && !hasMovedLeft) {
+            fallingShape.posX -= 30;
+            hasMovedLeft = true;
+        }
+
+        if (IsKeyUp(KEY_RIGHT)) hasMovedRight = false;
+        if (IsKeyUp(KEY_LEFT)) hasMovedLeft = false;
 
         if (fallingShape.posX - fallingShape.states[fallingShape.i].maxLeft < 250) {
             fallingShape.posX = 250 + fallingShape.states[fallingShape.i].maxLeft;
