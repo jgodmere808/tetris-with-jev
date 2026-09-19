@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <stdbool.h>
 
 #include "raylib.h"
 #include "shape/shape.h"
@@ -20,38 +21,42 @@ int main()
 
     // buildRandomShape();
 
-    // struct Shape nextShape = buildRandomShape();
-    // moveShape(&nextShape, 600, 150);
+    struct Shape nextShape = buildRandomShape();
+    moveShape(&nextShape, 600, 150);
 
-    // struct Shape fallingShape = buildRandomShape();
-    // moveShape(&fallingShape, 340, 100);
-
-    struct Shape shape = buildShape(BLUE_L);
-    moveShape(&shape, 250, 100);
-    rotateShape(&shape);
-    rotateShape(&shape);
-    rotateShape(&shape);
+    struct Shape fallingShape = buildRandomShape();
+    moveShape(&fallingShape, 340, 100);
 
     InitWindow(screenWidth, screenHeight, "Tetris with Jev");
 
     SetTargetFPS(60);
 
     while (!WindowShouldClose()) {
+
+        if (IsKeyDown(KEY_RIGHT)) fallingShape.posX += 30;
+        if (IsKeyDown(KEY_LEFT)) fallingShape.posX -= 30;
+
+        if (fallingShape.posX - fallingShape.states[fallingShape.i].maxLeft < 250) {
+            fallingShape.posX = 250 + fallingShape.states[fallingShape.i].maxLeft;
+        }
+        if (fallingShape.posX + fallingShape.states[fallingShape.i].maxRight > 550) {
+            fallingShape.posX = 550 - fallingShape.states[fallingShape.i].maxRight;
+        }
         
         // Update
-        // if (fallingShape.posY >= 670) {
-        //     fallingShape = nextShape;
-        //     moveShape(&fallingShape, 340, 100);
+        if (fallingShape.posY >= 670) {
+            fallingShape = nextShape;
+            moveShape(&fallingShape, 340, 100);
 
-        //     nextShape = buildRandomShape();
-        //     moveShape(&nextShape, 600, 150);
-        // } else {
-        //     timeBuffer += GetFrameTime();
-        //     if (timeBuffer >= blockSpeed) {
-        //         fallingShape.posY += 30;
-        //         timeBuffer = 0;
-        //     }
-        // }
+            nextShape = buildRandomShape();
+            moveShape(&nextShape, 600, 150);
+        } else {
+            timeBuffer += GetFrameTime();
+            if (timeBuffer >= blockSpeed) {
+                fallingShape.posY += 30;
+                timeBuffer = 0;
+            }
+        }
 
         // Draw
         BeginDrawing();
@@ -71,10 +76,8 @@ int main()
             DrawRectangle(570, 240, 210, 410, GRAY);
             DrawRectangle(575, 245, 200, 400, BLACK);
 
-            // drawShape(fallingShape);
-            // drawShape(nextShape);
-
-            drawShape(shape);
+            drawShape(fallingShape);
+            drawShape(nextShape);
 
             // Main Cover Rectangles
             DrawRectangle(250, 0, 300, 95, DARKGRAY);
