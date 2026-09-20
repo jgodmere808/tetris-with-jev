@@ -37,6 +37,7 @@ int main()
 
     while (!WindowShouldClose()) {
 
+        // Update
         if (IsKeyDown(KEY_RIGHT) && !hasMovedRight) {
             fallingShape.posX += 30;
             hasMovedRight = true;
@@ -60,9 +61,7 @@ int main()
         if (fallingShape.posX + fallingShape.states[fallingShape.i].maxRight > 550) {
             fallingShape.posX = 550 - fallingShape.states[fallingShape.i].maxRight;
         }
-        
-        // Update
-        if (fallingShape.posY >= 670) {
+        if (fallingShape.posY + fallingShape.states[fallingShape.i].maxBottom > 700) {
             fallingShape = nextShape;
             moveShape(&fallingShape, 340, 100);
 
