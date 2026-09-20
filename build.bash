@@ -1,4 +1,4 @@
-gcc $1 $2 -o main \
+gcc $1 $2 $3 -o main \
 -I$(brew --prefix raylib)/include -L$(brew --prefix raylib)/lib -lraylib \
 -framework OpenGL \
 -framework IOKit \

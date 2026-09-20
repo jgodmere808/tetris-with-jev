@@ -6,80 +6,7 @@
 
 #include "raylib.h"
 #include "shape/shape.h"
-
-struct StorePosition {
-    int row;
-    int col;
-};
-
-struct RawPosition {
-    int x;
-    int y;
-};
-
-struct StorePosition rawToStore(struct RawPosition *rawPos)
-{   
-    struct StorePosition storePos;
-
-    storePos.row = (rawPos->x - 250) / 30;
-    storePos.col = (rawPos->y - 100) / 30;
-
-    return storePos;
-}
-
-struct RawPosition storeToRaw(struct StorePosition *storePos)
-{
-    struct RawPosition rawPos;
-
-    rawPos.x = 30 * storePos->row + 250;
-    rawPos.y = 30 * storePos->col + 100;
-
-    return rawPos;
-}
-
-void storeShape(struct ShapeSquare squareStore[40][20], struct Shape *shape)
-{
-    struct StorePosition storePos;
-
-    // s1
-    storePos = rawToStore(&(struct RawPosition){
-        shape->states[shape->i].s1.borderPosX + shape->posX,
-        shape->states[shape->i].s1.borderPosY + shape->posY
-    });
-    squareStore[storePos.row][storePos.col] = shape->states[shape->i].s1;
-
-    // s2
-    storePos = rawToStore(&(struct RawPosition){
-        shape->states[shape->i].s2.borderPosX + shape->posX,
-        shape->states[shape->i].s2.borderPosY + shape->posY
-    });
-    squareStore[storePos.row][storePos.col] = shape->states[shape->i].s2;
-
-    // s3
-    storePos = rawToStore(&(struct RawPosition){
-        shape->states[shape->i].s3.borderPosX + shape->posX,
-        shape->states[shape->i].s3.borderPosY + shape->posY
-    });
-    squareStore[storePos.row][storePos.col] = shape->states[shape->i].s3;
-
-    // s4
-    storePos = rawToStore(&(struct RawPosition){
-        shape->states[shape->i].s4.borderPosX + shape->posX,
-        shape->states[shape->i].s4.borderPosY + shape->posY
-    });
-    squareStore[storePos.row][storePos.col] = shape->states[shape->i].s4;
-}
-
-void storeFallingShape(struct ShapeSquare squareStore[40][20], struct Shape *fallingShape, struct Shape *nextShape)
-{
-    storeShape(squareStore, fallingShape);
-
-    *fallingShape = *nextShape;
-    moveShape(fallingShape, 340, 100);
-
-    *nextShape = buildRandomShape();
-    moveShape(nextShape, 600, 150);
-}
+#include "store/store.h"
 
 int main()
 {
@@ -92,8 +19,6 @@ int main()
 
     double timeBuffer = 0;
     double blockSpeed = 1; // Start at 1 block per 1 seconds
-
-    struct ShapeSquare squareStore[40][20] = { { 0 } };
 
     const int screenWidth = 800;
     const int screenHeight = 800;
@@ -288,7 +213,7 @@ int main()
             fallingShape.posX = 550 - fallingShape.states[fallingShape.i].maxRight;
         }
         if (fallingShape.posY + fallingShape.states[fallingShape.i].maxBottom + 30 > 700) {
-            storeFallingShape(&squareStore, &fallingShape, &nextShape);
+            storeFallingShape(&fallingShape, &nextShape);
         } else {
             timeBuffer += GetFrameTime();
             if (timeBuffer >= blockSpeed) {
@@ -327,7 +252,7 @@ int main()
                         fallingShape.states[fallingShape.i].s1.borderPosY + fallingShape.posY + 30 == rawPos.y &&
                         fallingShape.states[fallingShape.i].s1.borderPosX + fallingShape.posX == rawPos.x
                     ) {
-                        storeFallingShape(&squareStore, &fallingShape, &nextShape);
+                        storeFallingShape(&fallingShape, &nextShape);
                     }
 
                     // s2 collision
@@ -335,7 +260,7 @@ int main()
                         fallingShape.states[fallingShape.i].s2.borderPosY + fallingShape.posY + 30 == rawPos.y &&
                         fallingShape.states[fallingShape.i].s2.borderPosX + fallingShape.posX == rawPos.x
                     ) {
-                        storeFallingShape(&squareStore, &fallingShape, &nextShape);
+                        storeFallingShape(&fallingShape, &nextShape);
                     }
 
                     // s3 collision
@@ -343,7 +268,7 @@ int main()
                         fallingShape.states[fallingShape.i].s3.borderPosY + fallingShape.posY + 30 == rawPos.y &&
                         fallingShape.states[fallingShape.i].s3.borderPosX + fallingShape.posX == rawPos.x
                     ) {
-                        storeFallingShape(&squareStore, &fallingShape, &nextShape);
+                        storeFallingShape(&fallingShape, &nextShape);
                     }
 
                     // s4 collision
@@ -351,7 +276,7 @@ int main()
                         fallingShape.states[fallingShape.i].s4.borderPosY + fallingShape.posY + 30 == rawPos.y &&
                         fallingShape.states[fallingShape.i].s4.borderPosX + fallingShape.posX == rawPos.x
                     ) {
-                        storeFallingShape(&squareStore, &fallingShape, &nextShape);
+                        storeFallingShape(&fallingShape, &nextShape);
                     }
 
                     DrawRectangle(
