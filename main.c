@@ -77,7 +77,7 @@ int main()
     bool hasMovedLeft = false, hasMovedRight = false, hasPressedUp = false;
 
     double timeBuffer = 0;
-    double blockSpeed = 1.5; // Start at 1 block per 1.5 seconds
+    double blockSpeed = 1; // Start at 1 block per 1 seconds
 
     struct ShapeSquare squareStore[40][20] = { { 0 } };
 
@@ -160,21 +160,23 @@ int main()
 
             for (int row = 0; row < 40; row++) {
                 for (int col = 0; col < 20; col++) {
-                    struct StorePosition storePos = { row, col };
-                    struct RawPosition rawPos = storeToRaw(&storePos);
+                    if (&squareStore[row][col] != 0) {
+                        struct StorePosition storePos = { row, col };
+                        struct RawPosition rawPos = storeToRaw(&storePos);
 
-                    DrawRectangle(
-                        rawPos.x, rawPos.y,
-                        squareStore[row][col].borderWidth,
-                        squareStore[row][col].borderHeight,
-                        squareStore[row][col].borderColor
-                    );
-                    DrawRectangle(
-                        rawPos.x, rawPos.y,
-                        squareStore[row][col].width,
-                        squareStore[row][col].height,
-                        squareStore[row][col].color
-                    );
+                        DrawRectangle(
+                            rawPos.x, rawPos.y,
+                            squareStore[row][col].borderWidth,
+                            squareStore[row][col].borderHeight,
+                            squareStore[row][col].borderColor
+                        );
+                        DrawRectangle(
+                            rawPos.x + 2, rawPos.y + 2,
+                            squareStore[row][col].width,
+                            squareStore[row][col].height,
+                            squareStore[row][col].color
+                        );
+                    }
                 }
             }
 
