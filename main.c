@@ -124,7 +124,7 @@ int main()
         if (fallingShape.posX + fallingShape.states[fallingShape.i].maxRight > 550) {
             fallingShape.posX = 550 - fallingShape.states[fallingShape.i].maxRight;
         }
-        if (fallingShape.posY + fallingShape.states[fallingShape.i].maxBottom > 700) {
+        if (fallingShape.posY + fallingShape.states[fallingShape.i].maxBottom + 30 > 700) {
             storeShape(squareStore, &fallingShape);
 
             fallingShape = nextShape;
@@ -160,16 +160,17 @@ int main()
 
             for (int row = 0; row < 40; row++) {
                 for (int col = 0; col < 20; col++) {
+                    struct StorePosition storePos = { row, col };
+                    struct RawPosition rawPos = storeToRaw(&storePos);
+
                     DrawRectangle(
-                        squareStore[row][col].borderPosX,
-                        squareStore[row][col].borderPosY,
+                        rawPos.x, rawPos.y,
                         squareStore[row][col].borderWidth,
                         squareStore[row][col].borderHeight,
                         squareStore[row][col].borderColor
                     );
                     DrawRectangle(
-                        squareStore[row][col].posX,
-                        squareStore[row][col].posY,
+                        rawPos.x, rawPos.y,
                         squareStore[row][col].width,
                         squareStore[row][col].height,
                         squareStore[row][col].color
