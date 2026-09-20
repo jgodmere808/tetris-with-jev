@@ -86,7 +86,7 @@ int main()
     srand(time(NULL));
 
     bool hasMovedLeft = false, hasMovedRight = false, hasPressedUp = false;
-    bool canMoveLeft = false, canMoveRight = false;
+    bool canMoveLeft = false, canMoveRight = false, canRotate = false;
 
     int row, col;
 
@@ -223,7 +223,57 @@ int main()
             hasMovedLeft = true;
         }
         if (IsKeyDown(KEY_UP) && !hasPressedUp) {
-            rotateShape(&fallingShape);
+
+            canRotate = true;
+
+            for (row = 0; row < 40; row++) {
+                for (col = 0; col < 20; col++) {
+                    if (squareStore[row][col].borderWidth != 30) continue;
+
+                    struct StorePosition storePos = { row, col };
+                    struct RawPosition rawPos = storeToRaw(&storePos);
+
+                    // s1 rotate collision
+                    if (
+                        fallingShape.states[fallingShape.i + 1].s1.borderPosX + fallingShape.posX == rawPos.x &&
+                        fallingShape.states[fallingShape.i + 1].s1.borderPosY + fallingShape.posY == rawPos.y
+                    ) {
+                        canRotate = false;
+                        break;
+                    }
+
+                    // s2 rotate collision
+                    if (
+                        fallingShape.states[fallingShape.i + 1].s2.borderPosX + fallingShape.posX == rawPos.x &&
+                        fallingShape.states[fallingShape.i + 1].s2.borderPosY + fallingShape.posY == rawPos.y
+                    ) {
+                        canRotate = false;
+                        break;
+                    }
+
+                    // s3 rotate collision
+                    if (
+                        fallingShape.states[fallingShape.i + 1].s3.borderPosX + fallingShape.posX == rawPos.x &&
+                        fallingShape.states[fallingShape.i + 1].s3.borderPosY + fallingShape.posY == rawPos.y
+                    ) {
+                        canRotate = false;
+                        break;
+                    }
+
+                    // s4 rotate collision
+                    if (
+                        fallingShape.states[fallingShape.i + 1].s4.borderPosX + fallingShape.posX == rawPos.x &&
+                        fallingShape.states[fallingShape.i + 1].s4.borderPosY + fallingShape.posY == rawPos.y
+                    ) {
+                        canRotate = false;
+                        break;
+                    }
+                }
+
+                if (!canRotate) break;
+            }
+
+            if (canRotate) rotateShape(&fallingShape);
             hasPressedUp = true;
         }
 
