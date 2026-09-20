@@ -37,19 +37,37 @@ struct RawPosition storeToRaw(struct StorePosition *storePos)
     return rawPos;
 }
 
-void freezeShape(struct ShapeSquare squareStore[40][20], struct Shape shape)
+void storeShape(struct ShapeSquare squareStore[40][20], struct Shape *shape)
 {
-    int posX = shape.posX;
-    int posY = shape.posY;
+    struct StorePosition storePos;
 
-    struct ShapeSquare s1 = shape.states[shape.i].s1;
-    struct ShapeSquare s2 = shape.states[shape.i].s2;
-    struct ShapeSquare s3 = shape.states[shape.i].s3;
-    struct ShapeSquare s4 = shape.states[shape.i].s4;
+    // s1
+    storePos = rawToStore(&(struct RawPosition){
+        shape->states[shape->i].s1.borderPosX + shape->posX,
+        shape->states[shape->i].s1.borderPosY + shape->posY
+    });
+    squareStore[storePos.row][storePos.col] = shape->states[shape->i].s1;
 
-    // translate from raw square position to field position and back
-    
-    squareStore[][]
+    // s2
+    storePos = rawToStore(&(struct RawPosition){
+        shape->states[shape->i].s2.borderPosX + shape->posX,
+        shape->states[shape->i].s2.borderPosY + shape->posY
+    });
+    squareStore[storePos.row][storePos.col] = shape->states[shape->i].s2;
+
+    // s3
+    storePos = rawToStore(&(struct RawPosition){
+        shape->states[shape->i].s3.borderPosX + shape->posX,
+        shape->states[shape->i].s3.borderPosY + shape->posY
+    });
+    squareStore[storePos.row][storePos.col] = shape->states[shape->i].s3;
+
+    // s4
+    storePos = rawToStore(&(struct RawPosition){
+        shape->states[shape->i].s4.borderPosX + shape->posX,
+        shape->states[shape->i].s4.borderPosY + shape->posY
+    });
+    squareStore[storePos.row][storePos.col] = shape->states[shape->i].s4;
 }
 
 int main()
@@ -61,7 +79,7 @@ int main()
     double timeBuffer = 0;
     double blockSpeed = 1.5; // Start at 1 block per 1.5 seconds
 
-    struct ShapeSquare squareStore[40][20];
+    struct ShapeSquare squareStore[40][20] = { { 0 } };
 
     const int screenWidth = 800;
     const int screenHeight = 800;
@@ -107,12 +125,13 @@ int main()
             fallingShape.posX = 550 - fallingShape.states[fallingShape.i].maxRight;
         }
         if (fallingShape.posY + fallingShape.states[fallingShape.i].maxBottom > 700) {
+            storeShape(squareStore, &fallingShape);
 
-            // fallingShape = nextShape;
-            // moveShape(&fallingShape, 340, 100);
+            fallingShape = nextShape;
+            moveShape(&fallingShape, 340, 100);
 
-            // nextShape = buildRandomShape();
-            // moveShape(&nextShape, 600, 150);
+            nextShape = buildRandomShape();
+            moveShape(&nextShape, 600, 150);
         } else {
             timeBuffer += GetFrameTime();
             if (timeBuffer >= blockSpeed) {
@@ -138,6 +157,25 @@ int main()
             // score
             DrawRectangle(570, 240, 210, 410, GRAY);
             DrawRectangle(575, 245, 200, 400, BLACK);
+
+            for (int row = 0; row < 40; row++) {
+                for (int col = 0; col < 20; col++) {
+                    DrawRectangle(
+                        squareStore[row][col].borderPosX,
+                        squareStore[row][col].borderPosY,
+                        squareStore[row][col].borderWidth,
+                        squareStore[row][col].borderHeight,
+                        squareStore[row][col].borderColor
+                    );
+                    DrawRectangle(
+                        squareStore[row][col].posX,
+                        squareStore[row][col].posY,
+                        squareStore[row][col].width,
+                        squareStore[row][col].height,
+                        squareStore[row][col].color
+                    );
+                }
+            }
 
             drawShape(fallingShape);
             drawShape(nextShape);
