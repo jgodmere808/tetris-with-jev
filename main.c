@@ -7,6 +7,51 @@
 #include "raylib.h"
 #include "shape/shape.h"
 
+struct StorePosition {
+    int row;
+    int col;
+};
+
+struct RawPosition {
+    int x;
+    int y;
+};
+
+struct StorePosition rawToStore(struct RawPosition *rawPos)
+{   
+    struct StorePosition storePos;
+
+    storePos.row = (rawPos->x - 250) / 30;
+    storePos.col = (rawPos->y - 100) / 30;
+
+    return storePos;
+}
+
+struct RawPosition storeToRaw(struct StorePosition *storePos)
+{
+    struct RawPosition rawPos;
+
+    rawPos.x = 30 * storePos->row + 250;
+    rawPos.y = 30 * storePos->col + 100;
+
+    return rawPos;
+}
+
+void freezeShape(struct ShapeSquare squareStore[40][20], struct Shape shape)
+{
+    int posX = shape.posX;
+    int posY = shape.posY;
+
+    struct ShapeSquare s1 = shape.states[shape.i].s1;
+    struct ShapeSquare s2 = shape.states[shape.i].s2;
+    struct ShapeSquare s3 = shape.states[shape.i].s3;
+    struct ShapeSquare s4 = shape.states[shape.i].s4;
+
+    // translate from raw square position to field position and back
+    
+    squareStore[][]
+}
+
 int main()
 {
     srand(time(NULL));
@@ -62,11 +107,12 @@ int main()
             fallingShape.posX = 550 - fallingShape.states[fallingShape.i].maxRight;
         }
         if (fallingShape.posY + fallingShape.states[fallingShape.i].maxBottom > 700) {
-            fallingShape = nextShape;
-            moveShape(&fallingShape, 340, 100);
 
-            nextShape = buildRandomShape();
-            moveShape(&nextShape, 600, 150);
+            // fallingShape = nextShape;
+            // moveShape(&fallingShape, 340, 100);
+
+            // nextShape = buildRandomShape();
+            // moveShape(&nextShape, 600, 150);
         } else {
             timeBuffer += GetFrameTime();
             if (timeBuffer >= blockSpeed) {
