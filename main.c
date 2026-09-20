@@ -70,11 +70,25 @@ void storeShape(struct ShapeSquare squareStore[40][20], struct Shape *shape)
     squareStore[storePos.row][storePos.col] = shape->states[shape->i].s4;
 }
 
+void storeFallingShape(struct ShapeSquare squareStore[40][20], struct Shape *fallingShape, struct Shape *nextShape)
+{
+    storeShape(squareStore, fallingShape);
+
+    *fallingShape = *nextShape;
+    moveShape(fallingShape, 340, 100);
+
+    *nextShape = buildRandomShape();
+    moveShape(nextShape, 600, 150);
+}
+
 int main()
 {
     srand(time(NULL));
 
     bool hasMovedLeft = false, hasMovedRight = false, hasPressedUp = false;
+    bool canMoveLeft = false, canMoveRight = false;
+
+    int row, col;
 
     double timeBuffer = 0;
     double blockSpeed = 1; // Start at 1 block per 1 seconds
@@ -102,11 +116,110 @@ int main()
 
         // Update
         if (IsKeyDown(KEY_RIGHT) && !hasMovedRight) {
-            fallingShape.posX += 30;
+            canMoveRight = true;
+
+            for (row = 0; row < 40; row++) {
+                for (col = 0; col < 20; col++) {
+                    if (squareStore[row][col].borderWidth != 30) continue;
+
+                    struct StorePosition storePos = { row, col };
+                    struct RawPosition rawPos = storeToRaw(&storePos);
+
+                    // s1 collision
+                    if (
+                        fallingShape.states[fallingShape.i].s1.borderPosX + fallingShape.posX + 30 == rawPos.x &&
+                        fallingShape.states[fallingShape.i].s1.borderPosY + fallingShape.posY == rawPos.y
+                    ) {
+                        canMoveRight = false;
+                        break;
+                    }
+
+                    // s2 collision
+                    if (
+                        fallingShape.states[fallingShape.i].s2.borderPosX + fallingShape.posX + 30 == rawPos.x &&
+                        fallingShape.states[fallingShape.i].s2.borderPosY + fallingShape.posY == rawPos.y
+                    ) {
+                        canMoveRight = false;
+                        break;
+                    }
+
+                    // s3 collision
+                    if (
+                        fallingShape.states[fallingShape.i].s3.borderPosX + fallingShape.posX + 30 == rawPos.x &&
+                        fallingShape.states[fallingShape.i].s3.borderPosY + fallingShape.posY == rawPos.y
+                    ) {
+                        canMoveRight = false;
+                        break;
+                    }
+
+                    // s4 collision
+                    if (
+                        fallingShape.states[fallingShape.i].s4.borderPosX + fallingShape.posX + 30 == rawPos.x &&
+                        fallingShape.states[fallingShape.i].s4.borderPosY + fallingShape.posY == rawPos.y
+                    ) {
+                        canMoveRight = false;
+                        break;
+                    }
+                }
+
+                if (!canMoveRight) break;
+            }
+
+            if (canMoveRight) fallingShape.posX += 30;
             hasMovedRight = true;
         }
         if (IsKeyDown(KEY_LEFT) && !hasMovedLeft) {
-            fallingShape.posX -= 30;
+
+            canMoveLeft = true;
+
+            for (row = 0; row < 40; row++) {
+                for (col = 0; col < 20; col++) {
+                    if (squareStore[row][col].borderWidth != 30) continue;
+
+                    struct StorePosition storePos = { row, col };
+                    struct RawPosition rawPos = storeToRaw(&storePos);
+
+                    // s1 collision
+                    if (
+                        fallingShape.states[fallingShape.i].s1.borderPosX + fallingShape.posX - 30 == rawPos.x &&
+                        fallingShape.states[fallingShape.i].s1.borderPosY + fallingShape.posY == rawPos.y
+                    ) {
+                        canMoveLeft = false;
+                        break;
+                    }
+
+                    // s2 collision
+                    if (
+                        fallingShape.states[fallingShape.i].s2.borderPosX + fallingShape.posX - 30 == rawPos.x &&
+                        fallingShape.states[fallingShape.i].s2.borderPosY + fallingShape.posY == rawPos.y
+                    ) {
+                        canMoveLeft = false;
+                        break;
+                    }
+
+                    // s3 collision
+                    if (
+                        fallingShape.states[fallingShape.i].s3.borderPosX + fallingShape.posX - 30 == rawPos.x &&
+                        fallingShape.states[fallingShape.i].s3.borderPosY + fallingShape.posY == rawPos.y
+                    ) {
+                        canMoveLeft = false;
+                        break;
+                    }
+
+                    // s4 collision
+                    if (
+                        fallingShape.states[fallingShape.i].s4.borderPosX + fallingShape.posX - 30 == rawPos.x &&
+                        fallingShape.states[fallingShape.i].s4.borderPosY + fallingShape.posY == rawPos.y
+                    ) {
+                        canMoveLeft = false;
+                        break;
+                    }
+                }
+
+                if (!canMoveLeft) break;
+            }
+
+            if (canMoveLeft) fallingShape.posX -= 30;
             hasMovedLeft = true;
         }
         if (IsKeyDown(KEY_UP) && !hasPressedUp) {
@@ -125,13 +238,7 @@ int main()
             fallingShape.posX = 550 - fallingShape.states[fallingShape.i].maxRight;
         }
         if (fallingShape.posY + fallingShape.states[fallingShape.i].maxBottom + 30 > 700) {
-            storeShape(squareStore, &fallingShape);
-
-            fallingShape = nextShape;
-            moveShape(&fallingShape, 340, 100);
-
-            nextShape = buildRandomShape();
-            moveShape(&nextShape, 600, 150);
+            storeFallingShape(&squareStore, &fallingShape, &nextShape);
         } else {
             timeBuffer += GetFrameTime();
             if (timeBuffer >= blockSpeed) {
@@ -158,25 +265,57 @@ int main()
             DrawRectangle(570, 240, 210, 410, GRAY);
             DrawRectangle(575, 245, 200, 400, BLACK);
 
-            for (int row = 0; row < 40; row++) {
-                for (int col = 0; col < 20; col++) {
-                    if (&squareStore[row][col] != 0) {
-                        struct StorePosition storePos = { row, col };
-                        struct RawPosition rawPos = storeToRaw(&storePos);
+            for (row = 0; row < 40; row++) {
+                for (col = 0; col < 20; col++) {
+                    if (squareStore[row][col].borderWidth != 30) continue;
 
-                        DrawRectangle(
-                            rawPos.x, rawPos.y,
-                            squareStore[row][col].borderWidth,
-                            squareStore[row][col].borderHeight,
-                            squareStore[row][col].borderColor
-                        );
-                        DrawRectangle(
-                            rawPos.x + 2, rawPos.y + 2,
-                            squareStore[row][col].width,
-                            squareStore[row][col].height,
-                            squareStore[row][col].color
-                        );
+                    struct StorePosition storePos = { row, col };
+                    struct RawPosition rawPos = storeToRaw(&storePos);
+
+                    // s1 collision
+                    if (
+                        fallingShape.states[fallingShape.i].s1.borderPosY + fallingShape.posY + 30 == rawPos.y &&
+                        fallingShape.states[fallingShape.i].s1.borderPosX + fallingShape.posX == rawPos.x
+                    ) {
+                        storeFallingShape(&squareStore, &fallingShape, &nextShape);
                     }
+
+                    // s2 collision
+                    if (
+                        fallingShape.states[fallingShape.i].s2.borderPosY + fallingShape.posY + 30 == rawPos.y &&
+                        fallingShape.states[fallingShape.i].s2.borderPosX + fallingShape.posX == rawPos.x
+                    ) {
+                        storeFallingShape(&squareStore, &fallingShape, &nextShape);
+                    }
+
+                    // s3 collision
+                    if (
+                        fallingShape.states[fallingShape.i].s3.borderPosY + fallingShape.posY + 30 == rawPos.y &&
+                        fallingShape.states[fallingShape.i].s3.borderPosX + fallingShape.posX == rawPos.x
+                    ) {
+                        storeFallingShape(&squareStore, &fallingShape, &nextShape);
+                    }
+
+                    // s4 collision
+                    if (
+                        fallingShape.states[fallingShape.i].s4.borderPosY + fallingShape.posY + 30 == rawPos.y &&
+                        fallingShape.states[fallingShape.i].s4.borderPosX + fallingShape.posX == rawPos.x
+                    ) {
+                        storeFallingShape(&squareStore, &fallingShape, &nextShape);
+                    }
+
+                    DrawRectangle(
+                        rawPos.x, rawPos.y,
+                        squareStore[row][col].borderWidth,
+                        squareStore[row][col].borderHeight,
+                        squareStore[row][col].borderColor
+                    );
+                    DrawRectangle(
+                        rawPos.x + 2, rawPos.y + 2,
+                        squareStore[row][col].width,
+                        squareStore[row][col].height,
+                        squareStore[row][col].color
+                    );
                 }
             }
 
