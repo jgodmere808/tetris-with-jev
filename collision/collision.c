@@ -154,6 +154,8 @@ bool moveDownCollides(struct Shape *fallingShape)
 bool rotateCollides(struct Shape *fallingShape)
 {
     int row, col;
+    int nextShapeI = fallingShape->i + 1;
+    if (nextShapeI > 3) nextShapeI = 0;
 
     for (row = 0; row < 40; row++) {
         for (col = 0; col < 20; col++) {
@@ -164,32 +166,32 @@ bool rotateCollides(struct Shape *fallingShape)
 
             // s1 rotate collision
             if (
-                fallingShape->states[fallingShape->i + 1].s1.borderPosX + fallingShape->posX == rawPos.x &&
-                fallingShape->states[fallingShape->i + 1].s1.borderPosY + fallingShape->posY == rawPos.y
+                fallingShape->states[nextShapeI].s1.borderPosX + fallingShape->posX == rawPos.x &&
+                fallingShape->states[nextShapeI].s1.borderPosY + fallingShape->posY == rawPos.y
             ) {
                 return true;
             }
 
             // s2 rotate collision
             if (
-                fallingShape->states[fallingShape->i + 1].s2.borderPosX + fallingShape->posX == rawPos.x &&
-                fallingShape->states[fallingShape->i + 1].s2.borderPosY + fallingShape->posY == rawPos.y
+                fallingShape->states[nextShapeI].s2.borderPosX + fallingShape->posX == rawPos.x &&
+                fallingShape->states[nextShapeI].s2.borderPosY + fallingShape->posY == rawPos.y
             ) {
                 return true;
             }
 
             // s3 rotate collision
             if (
-                fallingShape->states[fallingShape->i + 1].s3.borderPosX + fallingShape->posX == rawPos.x &&
-                fallingShape->states[fallingShape->i + 1].s3.borderPosY + fallingShape->posY == rawPos.y
+                fallingShape->states[nextShapeI].s3.borderPosX + fallingShape->posX == rawPos.x &&
+                fallingShape->states[nextShapeI].s3.borderPosY + fallingShape->posY == rawPos.y
             ) {
                 return true;
             }
 
             // s4 rotate collision
             if (
-                fallingShape->states[fallingShape->i + 1].s4.borderPosX + fallingShape->posX == rawPos.x &&
-                fallingShape->states[fallingShape->i + 1].s4.borderPosY + fallingShape->posY == rawPos.y
+                fallingShape->states[nextShapeI].s4.borderPosX + fallingShape->posX == rawPos.x &&
+                fallingShape->states[nextShapeI].s4.borderPosY + fallingShape->posY == rawPos.y
             ) {
                 return true;
             }
