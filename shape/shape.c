@@ -289,6 +289,12 @@ void moveShape(struct Shape *shape, int posX, int posY)
     shape->posY = posY;
 }
 
+void moveShapeRelative(struct Shape *shape, int posX, int posY)
+{
+    shape->posX += posX;
+    shape->posY += posY;
+}
+
 void rotateShape(struct Shape *shape)
 {
     shape->i++;

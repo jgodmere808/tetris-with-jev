@@ -55,6 +55,8 @@ struct Shape buildRandomShape();
 
 void moveShape(struct Shape *shape, int posX, int posY);
 
+void moveShapeRelative(struct Shape *shape, int posX, int posY);
+
 void rotateShape(struct Shape *shape);
 
 void drawShape(struct Shape shape);
